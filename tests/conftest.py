@@ -1,5 +1,16 @@
+import os
+
 import pytest
 from unittest.mock import AsyncMock, patch
+
+
+def pytest_collection_modifyitems(config, items):
+    if os.getenv("OLLAMA_URL", "").strip():
+        return
+    skip = pytest.mark.skip(reason="OLLAMA_URL not set — live Ollama required")
+    for item in items:
+        if item.get_closest_marker("integration"):
+            item.add_marker(skip)
 
 
 @pytest.fixture

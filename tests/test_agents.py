@@ -36,7 +36,7 @@ def test_agent_attributes(agent, expected):
     assert agent.perspective.startswith(perspective_prefix)
     assert agent.system_prompt.strip(), f"{name} system_prompt must not be empty"
     assert (
-        name.split()[0] in agent.system_prompt
+        name.lower() in agent.system_prompt.lower()
     ), f"{name} must appear in its own system_prompt"
 
 

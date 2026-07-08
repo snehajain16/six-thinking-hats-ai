@@ -88,3 +88,10 @@ def test_analyze_response_has_error_field(mock_ollama):
     for analysis in data["analyses"]:
         assert "error" in analysis
         assert analysis["error"] is False
+
+
+def test_problem_input_context_defaults_to_none():
+    from models import ProblemInput
+
+    p = ProblemInput(problem="Test")
+    assert p.context is None

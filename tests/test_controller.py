@@ -57,3 +57,9 @@ async def test_blue_hat_always_runs(failing_ollama):
     result = await run_analysis("Test problem")
     blue = result.analyses[5]
     assert blue.hat == "Blue Hat"
+
+
+@pytest.mark.asyncio
+async def test_run_analysis_calls_ollama_six_times(mock_ollama):
+    await run_analysis("Any problem")
+    assert mock_ollama.call_count == 6
