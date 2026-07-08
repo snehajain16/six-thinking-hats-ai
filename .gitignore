@@ -6,3 +6,7 @@ venv/
 *.egg-info/
 dist/
 .pytest_cache/
+
+# SpecKit — keep skills but exclude any agent credentials
+.claude/settings.local.json
+
