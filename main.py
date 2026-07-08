@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 import httpx
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import StreamingResponse
 
 load_dotenv()
 
@@ -14,7 +15,7 @@ from logging_config import setup_logging  # noqa: E402
 setup_logging()
 
 from models import ProblemInput, SixHatsResponse  # noqa: E402
-from controller import run_analysis  # noqa: E402
+from controller import run_analysis, stream_analysis  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -65,6 +66,17 @@ async def log_requests(request: Request, call_next):
 async def health():
     logger.info("health_check status=ok")
     return {"status": "ok"}
+
+
+@app.post("/analyze/stream")
+async def analyze_stream(body: ProblemInput):
+    logger.info(
+        "request_received path=/analyze/stream problem_len=%d", len(body.problem)
+    )
+    return StreamingResponse(
+        stream_analysis(body.problem, body.context or ""),
+        media_type="text/event-stream",
+    )
 
 
 @app.post("/analyze", response_model=SixHatsResponse)
